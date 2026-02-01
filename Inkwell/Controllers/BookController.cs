@@ -1,5 +1,6 @@
 ﻿using Inkwell.Models;
 using Inkwell.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,6 +18,8 @@ namespace Inkwell.Controllers
             this.bookService = bookService;
         }
 
+
+        [Authorize]
         [HttpPost("save")]
         public async Task<IActionResult> SaveBook([FromBody] BookDto bookDto)
         {

@@ -17,6 +17,8 @@ builder.Services.AddSingleton<MongoDbService>();
 builder.Services.AddSingleton<JwtAuthService>();
 builder.Services.AddSingleton<UserService>();
 
+builder.Services.AddHttpContextAccessor();
+
 builder.Services.AddSingleton<BookService>();
 
 
