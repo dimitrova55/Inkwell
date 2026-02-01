@@ -11,7 +11,7 @@ namespace Inkwell.Models
         public string Description { get; set; } = string.Empty;
 
         [DefaultValue(null)]
-        public List<string>? Genres { get; set; } = null;
+        public HashSet<string>? Genres { get; set; } = null;
 
         [DefaultValue(false)]
         public bool IsFavourite { get; set; } = false;
