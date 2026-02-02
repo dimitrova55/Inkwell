@@ -68,36 +68,42 @@ namespace Inkwell.Controllers
             }
         }
 
-        //[Authorize]
-        //[HttpPut("update/book-info/{bookId}")]
-        //public async Task<IActionResult> UpdateBookInfo(string bookId, [FromBody] BookDto bookDto)
-        //{
-        //    try
-        //    {
-        //        var result = await bookService.UpdateBookInfo(bookId, bookDto);
+        [Authorize]
+        [HttpPut("update/book-info/{bookId}")]
+        public async Task<IActionResult> UpdateBookInfo(string bookId, [FromBody] BookDto bookDto)
+        {
+            try
+            {
+                var result = await bookService.UpdateBookInfo(bookId, bookDto);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                if (result)
+                    return Ok("Book info successfully updated.");
+                else
+                    return BadRequest("The book couldn't be updated.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
-        //[Authorize]
-        //[HttpDelete("delete/{bookId}")]
-        //public async Task<IActionResult> DeleteBookInfo(String bookId)
-        //{
-        //    try
-        //    {
-        //        // await bookService.SaveBook(bookDto);
+        [Authorize]
+        [HttpDelete("delete/{bookId}")]
+        public async Task<IActionResult> DeleteBookInfo(String bookId)
+        {
+            try
+            {
+                var result = await bookService.DeleteBook(bookId);
 
-        //        return Ok();
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return BadRequest(ex.Message);
-        //    }
-        //}
+                if (result)
+                    return Ok("Book successfully deleted.");
+                else
+                    return BadRequest("The book couldn't be deleted.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

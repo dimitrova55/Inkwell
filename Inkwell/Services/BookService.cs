@@ -49,7 +49,6 @@ namespace Inkwell.Services
 
         public async Task<List<Book>> GetListOfBooksByUser()
         {
-            // throw new NotImplementedException();
 
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var bookList = await bookCollection.Find(u => u.UserId == userId).ToListAsync();
@@ -60,8 +59,6 @@ namespace Inkwell.Services
 
         public async Task<List<Book>> GetListOfBooksByAuthor(string author)
         {
-            // throw new NotImplementedException();
-
             var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var bookList = await bookCollection
                 .Find(u => u.UserId == userId && u.Author.ToLower() == author.ToLower())
@@ -70,16 +67,37 @@ namespace Inkwell.Services
             return bookList;
         }
 
-        //public async Task<Book> UpdateBookInfo(string bookId, BookDto bookDto)
-        //{
-        //    // throw new NotImplementedException();
+        public async Task<bool> UpdateBookInfo(string bookId, BookDto bookDto)
+        {
+            HashSet<string>? genres = null;
 
-        //    // var userId = _httpContextAccessor.HttpContext?.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //    var savedBook = await bookCollection
-        //        .Find(u => u.Id == bookId)
-        //        .FirstOrDefaultAsync();
+            if (bookDto.Genres != null)
+            {
+                genres = new HashSet<string>(bookDto.Genres);
+            }
 
-        //    return savedBook;
-        //}
+            var filter = Builders<Book>.Filter.Eq(b => b.Id, bookId);
+            var update = Builders<Book>.Update
+                                .Set(b => b.Title, bookDto.Title)
+                                .Set(b => b.Author, bookDto.Author)
+                                .Set(b => b.Description, bookDto.Description)
+                                .Set(b => b.IsRead, bookDto.IsRead)
+                                .Set(b => b.IsFavourite, bookDto.IsFavourite)
+                                .Set(b => b.Genres, genres);
+
+            var result = await bookCollection.UpdateOneAsync(filter, update);
+
+            // Return true if the book was found and modified
+            return result.ModifiedCount > 0;
+        }
+
+        public async Task<bool> DeleteBook(string bookId)
+        {         
+            var result = await bookCollection.DeleteOneAsync(u => u.Id == bookId);
+
+            // Returns true if a book was actually removed
+            return result.DeletedCount > 0; 
+
+        }
     }
 }
